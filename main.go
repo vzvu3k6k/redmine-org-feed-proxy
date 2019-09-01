@@ -39,8 +39,6 @@ func fetch(u *url.URL) (io.ReadCloser, error) {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/atom+xml; charset=utf-8")
-
 	u, err := resolveURL(r.URL.Path)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -55,6 +53,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/atom+xml; charset=utf-8")
 	io.Copy(w, body)
 	body.Close()
 }
