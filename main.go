@@ -41,15 +41,13 @@ func fetch(u *url.URL) (io.ReadCloser, error) {
 func handler(w http.ResponseWriter, r *http.Request) {
 	u, err := resolveURL(r.URL.Path)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	body, err := fetch(u)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
