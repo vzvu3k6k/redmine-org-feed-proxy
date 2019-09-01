@@ -2,14 +2,18 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
+
+	"golang.org/x/time/rate"
 )
+
+// limits only one request per 50 seconds (allowing some bursts)
+var limiter = rate.NewLimiter(0.02, 3)
 
 func resolveURL(path string) (*url.URL, error) {
 	u, err := url.Parse("https://redmine.org/" + path)
@@ -42,6 +46,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	u, err := resolveURL(r.URL.Path)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if limiter.Allow() == false {
+		http.Error(w, http.StatusText(http.StatusTooManyRequests), http.StatusTooManyRequests)
 		return
 	}
 
