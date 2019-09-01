@@ -12,7 +12,7 @@ import (
 	"golang.org/x/time/rate"
 )
 
-// limits only one request per 50 seconds (allowing some bursts)
+// allows only one request per 50 seconds (allowing some bursts)
 var limiter = rate.NewLimiter(0.02, 3)
 
 func resolveURL(path string) (*url.URL, error) {
