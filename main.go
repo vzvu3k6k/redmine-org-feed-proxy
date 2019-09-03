@@ -26,7 +26,7 @@ func resolveURL(path string) (*url.URL, error) {
 	}
 
 	if !strings.HasSuffix(u.RequestURI(), ".atom") {
-		return nil, errors.New("path must be ended with `.atom`")
+		return nil, errors.New("path must end with `.atom`")
 	}
 
 	return u, nil
