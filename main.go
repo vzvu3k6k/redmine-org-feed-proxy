@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/gorilla/handlers"
 	"golang.org/x/time/rate"
 )
 
@@ -71,6 +72,6 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
-	http.HandleFunc("/", handler)
+	http.Handle("/", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(handler)))
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
